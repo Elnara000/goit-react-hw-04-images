@@ -17,29 +17,6 @@ const ImageGallery = ({ searchName }) => {
       return;
     }
     setStatus('pending');
-    fetchImages(searchName)
-      .then(value => {
-        if (value.hits < 1) {
-          return Promise.reject(new Error('No results'));
-        }
-        return value;
-      })
-      .then(value => {
-        setTotalHits(value.totalHits);
-        setValue(value.hits);
-        setStatus('resolved');
-      })
-      .catch(error => {
-        setError(error);
-        setStatus('rejected');
-      });
-  }, [searchName]);
-
-  useEffect(() => {
-    if (searchName === '') {
-      return;
-    }
-    setStatus('pending');
     fetchImages(searchName, page)
       .then(value => {
         if (value.hits < 1) {
@@ -49,14 +26,18 @@ const ImageGallery = ({ searchName }) => {
       })
       .then(data => {
         setTotalHits(data.totalHits);
-        setValue(prevValue => [...prevValue, ...data.hits]);
+        if (page === 1) {
+          setValue(data.hits);
+        } else {
+          setValue(prevValue => [...prevValue, ...data.hits]);
+        }
         setStatus('resolved');
       })
       .catch(error => {
         setError(error);
         setStatus('rejected');
       });
-  }, [page]);
+  }, [searchName, page]);
 
   const loadMore = () => {
     setPage(page + 1);
