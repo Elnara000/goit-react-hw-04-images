@@ -17,7 +17,7 @@ const ImageGallery = ({ searchName }) => {
       return;
     }
     setStatus('pending');
-    fetchImages(searchName, page)
+    fetchImages(searchName, 1)
       .then(value => {
         if (value.hits < 1) {
           return Promise.reject(new Error('No results'));
@@ -39,9 +39,11 @@ const ImageGallery = ({ searchName }) => {
     if (searchName === '') {
       return;
     }
+    console.log(1, value);
     setStatus('pending');
     fetchImages(searchName, page)
       .then(value => {
+        console.log(2, value);
         if (value.hits < 1) {
           return Promise.reject(new Error('No results'));
         }
@@ -56,7 +58,7 @@ const ImageGallery = ({ searchName }) => {
         setError(error);
         setStatus('rejected');
       });
-  }, [page]);
+  }, [searchName, page]);
 
   const loadMore = () => {
     setPage(page + 1);
